@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sourabh Awate | Backend Java Developer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: { light: '#3b82f6', dark: '#2563eb' },
+                        secondary: { light: '#10b981', dark: '#059669' }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.6s ease-in-out forwards',
+                        'slide-up': 'slideUp 0.6s ease-out forwards'
+                    },
+                    keyframes: {
+                        fadeIn:  { '0%': { opacity: '0' },                              '100%': { opacity: '1' } },
+                        slideUp: { '0%': { transform: 'translateY(24px)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Gradient text */
+        .gradient-text { background-clip: text; -webkit-background-clip: text; color: transparent; }
+        .light .gradient-text { background-image: linear-gradient(45deg,#3b82f6,#10b981); }
+        .dark  .gradient-text { background-image: linear-gradient(45deg,#60a5fa,#34d399); }
+
+        /* Card hover lift */
+        .project-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .project-card:hover { transform: translateY(-6px); }
+
+        /* Nav underline */
+        .nav-link { position: relative; }
+        .nav-link::after { content:''; position:absolute; width:0; height:2px; bottom:-2px; left:0; background-color:currentColor; transition:width 0.3s ease; }
+        .nav-link:hover::after { width:100%; }
+
+        /* Skill bar animation */
+        .skill-bar { transition: width 1s ease-in-out; }
+
+        /* Timeline line */
+        .timeline-item:not(:last-child)::after {
+            content:''; display:block; width:2px; height:2rem; background:#d1d5db; margin-left:1.25rem; margin-top:0.5rem;
+        }
+        .dark .timeline-item:not(:last-child)::after { background:#4b5563; }
+
+        /* Toasts */
+        #toast { transition: opacity 0.4s ease, transform 0.4s ease; }
+    </style>
+</head>
+
+<body class="light bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
+
+<!-- ═══════════════════════════════════════════════
+     HEADER / NAV
+═══════════════════════════════════════════════ -->
+<header class="fixed w-full z-50 bg-slate-50/90 dark:bg-slate-900/90 backdrop-blur-md shadow-sm border-b border-slate-200/50 dark:border-slate-800/50 transition-colors duration-300">
+    <div class="container mx-auto px-6 py-4">
+        <nav class="flex items-center w-full">
+
+            <a href="#" id="nav-brand" class="text-2xl font-bold gradient-text shrink-0">
+                Portfolio
+            </a>
+
+            <div class="flex-1 flex justify-center md:justify-end">
+                <div class="hidden md:flex space-x-8 mr-10">
+                    <a href="#home"           class="nav-link">Home</a>
+                    <a href="#about"          class="nav-link">About</a>
+                    <a href="#experience"     class="nav-link">Experience</a>
+<!--                    <a href="#projects"       class="nav-link">Projects</a>-->
+                    <a href="#skills"         class="nav-link">Skills</a>
+                    <a href="#certifications" class="nav-link">Certifications</a>
+                    <a href="#contact"        class="nav-link">Contact</a>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-2 shrink-0">
+                <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-transform">
+                    <i class="fas fa-moon dark:hidden"></i>
+                    <i class="fas fa-sun hidden dark:block"></i>
+                </button>
+                <button id="mobile-menu-button" class="md:hidden p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </nav>
+    </div>
+
+    <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-gray-800 shadow-lg border-t border-gray-100 dark:border-gray-700">
+        <div class="container mx-auto px-6 py-4 flex flex-col space-y-4">
+            <a href="#home"           class="nav-link">Home</a>
+            <a href="#about"          class="nav-link">About</a>
+            <a href="#experience"     class="nav-link">Experience</a>
+<!--            <a href="#projects"       class="nav-link">Projects</a>-->
+            <a href="#skills"         class="nav-link">Skills</a>
+            <a href="#certifications" class="nav-link">Certifications</a>
+            <a href="#contact"        class="nav-link">Contact</a>
+        </div>
+    </div>
+</header>
+<!-- ═══════════════════════════════════════════════
+     HERO
+═══════════════════════════════════════════════ -->
+<section id="home" class="min-h-screen h-auto md:min-h-screen flex items-center justify-center pt-20 pb-12 bg-white dark:bg-[#0b1120] overflow-hidden -mb-px relative z-10">
+    <div class="container mx-auto px-6 max-w-7xl">
+        <div class="flex flex-col md:flex-row items-center justify-center gap-16 md:gap-24">
+
+            <div class="md:w-3/5 max-w-2xl text-center md:text-left animate-fade-in">
+                <h2 class="text-2xl md:text-3xl font-semibold mb-4 text-gray-700 dark:text-gray-300">
+                    Hi, I'm
+                </h2>
+                <h1 id="hero-role" class="text-5xl md:text-7xl font-extrabold mb-6 tracking-tight">
+                    Sourabh <span class="text-blue-500">Awate</span>
+                </h1>
+                <p id="hero-summary" class="text-xl md:text-2xl mb-10 text-gray-600 dark:text-gray-400 leading-relaxed font-light">
+                    Backend Engineer at <strong>Jio Platforms Limited</strong> building resilient, cloud-native microservices with Java, Spring Boot, and Kubernetes.
+                </p>
+
+                <div class="flex flex-col sm:flex-row justify-center md:justify-start space-y-4 sm:space-y-0 sm:space-x-6">
+                    <a href="#contact"
+                       class="px-10 py-4 bg-blue-600 text-white rounded-xl font-bold text-lg hover:scale-105 hover:shadow-lg transition-all">
+                        Contact Me
+                    </a>
+                    <a id="hero-linkedin" href="https://www.linkedin.com/in/sourabh-awate-350b191a1" target="_blank"
+                       class="px-10 py-4 border-2 border-gray-300 dark:border-gray-600 rounded-xl font-bold text-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all flex items-center justify-center">
+                        <i class="fab fa-linkedin mr-2"></i>LinkedIn
+                    </a>
+                </div>
+            </div>
+
+            <div class="md:w-2/5 flex justify-center animate-slide-up">
+                <div class="relative w-72 h-72 md:w-96 md:h-[28rem] rounded-3xl overflow-hidden border-4 border-white dark:border-gray-800 shadow-[0_20px_50px_rgba(0,0,0,0.3)] dark:shadow-[0_20px_50px_rgba(59,130,246,0.15)]">
+                    <img id="hero-photo"
+                         src="assets/images/my photo.jpeg"
+                         alt="Sourabh Awate Profile"
+                         class="w-full h-full object-cover"
+                         onerror="this.src='https://ui-avatars.com/api/?name=Sourabh+Awate&size=500&background=3b82f6&color=fff&bold=true'">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     ABOUT
+═══════════════════════════════════════════════ -->
+<section id="about" class="min-h-screen scroll-mt-24 bg-white dark:bg-[#0b1120] transition-colors duration-300 font-['Outfit'] pt-14 pb-16 mt-0 overflow-hidden flow-root bg-clip-padding border-t border-white dark:border-[#0b1120]">
+    <div class="container mx-auto px-6 max-w-7xl">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white font-['Plus_Jakarta_Sans'] tracking-tight">
+                About <span class="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">Me</span>
+            </h2>
+        </div>
+
+        <div class="flex flex-col lg:flex-row items-center lg:items-start gap-12 lg:gap-20">
+
+            <div class="lg:w-1/3 flex justify-center">
+                <div class="relative group w-full max-w-[340px]">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-[2.5rem] blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
+                    <div class="relative aspect-[14/15] rounded-[2.5rem] overflow-hidden bg-white dark:bg-gray-800 shadow-2xl border border-gray-100 dark:border-gray-800">
+                        <img id="about-photo"
+                             src="assets/images/my photo.jpeg"
+                             alt="Sourabh Awate"
+                             class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700 ease-in-out"
+                             onerror="this.src='https://ui-avatars.com/api/?name=Sourabh+Awate&size=400&background=3b82f6&color=fff&bold=true'">
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:w-2/3">
+                <p id="about-summary" class="text-xl md:text-2xl text-gray-600 dark:text-gray-400 leading-relaxed mb-8 font-light">
+                    I am a <span class="text-gray-900 dark:text-white font-bold">Java Backend Developer at Jio Platforms Limited</span> with over 3.5+ years of experience specializing in high-performance Java microservices.
+                    I focus on building resilient, cloud-native architectures using
+                    <span class="text-blue-500 font-semibold italic">Spring Boot, Docker, and Kubernetes</span>
+                    to ensure 99.9% service reliability for large-scale systems. My approach combines deep technical expertise in
+                    <span class="text-blue-500 font-semibold italic">Core Java and Hibernate</span>
+                    with a commitment to optimizing system throughput and low-latency performance.
+                </p>
+
+                <div class="p-6 rounded-[2rem] border border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/50 hover:border-blue-500/30 transition-all duration-300 shadow-sm">
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                        <div class="flex items-center text-center md:text-left">
+                            <div class="hidden md:block p-3 rounded-2xl bg-blue-100 dark:bg-blue-900/30 mr-5">
+                                <i class="fas fa-briefcase text-blue-600 dark:text-blue-400 text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-0.5 font-['Plus_Jakarta_Sans']">Work Experience</h4>
+                                <h3 class="font-bold text-xl md:text-2xl text-gray-900 dark:text-white leading-tight">Software Developer</h3>
+                                <p class="text-base text-gray-500 font-medium">Jio Platforms Limited</p>
+                            </div>
+                        </div>
+
+                        <div class="inline-block px-4 py-1.5 rounded-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-xs font-bold text-gray-700 dark:text-gray-300 shadow-xs whitespace-nowrap">
+                            July 2022 — Present
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     EXPERIENCE
+═══════════════════════════════════════════════ -->
+
+<section id="experience" class="min-h-screen bg-white dark:bg-[#0b1120] pt-12 pb-14 mt-0 transition-colors duration-300 overflow-hidden flow-root relative z-0" style="scroll-margin-top: 80;">
+    <div class="container mx-auto px-6 max-w-6xl">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white font-['Plus_Jakarta_Sans'] tracking-tight">
+                Professional <span class="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">Impact</span>
+            </h2>
+        </div>
+
+        <div class="relative group bg-gray-50 dark:bg-[#111827] p-6 md:p-10 rounded-[2.5rem] border border-gray-200 dark:border-gray-800 shadow-2xl transition-all duration-500">
+
+            <div class="flex flex-col md:flex-row justify-between items-end mb-10 border-b border-gray-200 dark:border-gray-800 pb-8 gap-4 text-center md:text-left">
+                <div class="w-full md:w-auto">
+                    <div class="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4">
+                        <h3 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white tracking-tighter">
+                            Java Backend <span class="text-blue-600">Developer</span>
+                        </h3>
+                        <span class="text-gray-400 dark:text-gray-500 font-bold text-sm md:text-lg tracking-tight">
+                            @ Jio Platforms Limited
+                        </span>
+                    </div>
+                </div>
+
+                <div class="w-full md:w-auto text-center md:text-right">
+                    <span class="px-3 py-1 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 text-[10px] font-bold rounded-lg border border-gray-200 dark:border-gray-700 uppercase tracking-widest">
+                        July 2022 — Present
+                    </span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-10 gap-x-8">
+
+                <div class="group/item">
+                    <div class="flex items-center mb-3 gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-500 group-hover/item:bg-blue-500 group-hover/item:text-white transition-all">
+                            <i class="fas fa-code text-xs"></i>
+                        </div>
+                        <h4 class="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">Service API Layer</h4>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-400 text-xs leading-relaxed">
+                        Designed and deployed <strong>RESTful APIs</strong> for the BSF using core Java and Hibernate, improving response times by <strong>25%</strong>.
+                    </p>
+                </div>
+
+                <div class="group/item">
+                    <div class="flex items-center mb-3 gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-cyan-500/10 flex items-center justify-center text-cyan-500 group-hover/item:bg-cyan-600 group-hover/item:text-white transition-all">
+                            <i class="fas fa-database text-xs"></i>
+                        </div>
+                        <h4 class="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">Caching & Throughput</h4>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-400 text-xs leading-relaxed">
+                        Integrated <strong>Key-DB</strong> for in-memory caching, reducing database load and enhancing service throughput by <strong>40%</strong>.
+                    </p>
+                </div>
+
+                <div class="group/item">
+                    <div class="flex items-center mb-3 gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center text-indigo-500 group-hover/item:bg-indigo-600 group-hover/item:text-white transition-all">
+                            <i class="fas fa-bolt text-xs"></i>
+                        </div>
+                        <h4 class="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">Reactive Engineering</h4>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-400 text-xs leading-relaxed">
+                        Built the <strong>Stack Edge Gateway (SEG)</strong> using <strong>RxJava and HTTP/2</strong>, achieving a <strong>30% increase</strong> in throughput under peak load.
+                    </p>
+                </div>
+
+                <div class="group/item">
+                    <div class="flex items-center mb-3 gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-500 group-hover/item:bg-purple-600 group-hover/item:text-white transition-all">
+                            <i class="fas fa-sync-alt text-xs"></i>
+                        </div>
+                        <h4 class="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">Stateful Signaling</h4>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-400 text-xs leading-relaxed">
+                        Implemented <strong>WebSocket</strong> channels between SEG and BSF, supporting persistent and stateful signaling in 5G environments.
+                    </p>
+                </div>
+
+                <div class="group/item">
+                    <div class="flex items-center mb-3 gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-green-500/10 flex items-center justify-center text-green-500 group-hover/item:bg-green-600 group-hover/item:text-white transition-all">
+                            <i class="fas fa-dharmachakra text-xs"></i>
+                        </div>
+                        <h4 class="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">Cloud Orchestration</h4>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-400 text-xs leading-relaxed">
+                        Deployed services on <strong>Kubernetes</strong> clusters, maintaining <strong>99.9% uptime</strong> and ensuring high scalability and fault tolerance.
+                    </p>
+                </div>
+
+                <div class="group/item">
+                    <div class="flex items-center mb-3 gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center text-red-500 group-hover/item:bg-red-500 group-hover/item:text-white transition-all">
+                            <i class="fas fa-user-shield text-xs"></i>
+                        </div>
+                        <h4 class="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">Identity & Security</h4>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-400 text-xs leading-relaxed">
+                        Enabled <strong>X5C/X5U certificate</strong> support to enhance <strong>OAuth token validation</strong> and harden cloud-native system security.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     SKILLS
+═══════════════════════════════════════════════ -->
+<section id="skills" class="min-h-screen bg-white dark:bg-[#0b1120] pt-20 pb-16 mt-0 transition-colors duration-300 overflow-hidden flow-root" style="scroll-margin-top: 80px;">
+    <div class="container mx-auto px-6 max-w-6xl">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white font-['Plus_Jakarta_Sans'] tracking-tight">
+                Technical <span class="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">Skills</span>
+            </h2>
+        </div>
+        <div id="skills-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow">
+                <div class="text-blue-500 mb-4 text-2xl"><i class="fas fa-code"></i></div>
+                <h3 class="font-bold text-xl mb-4 text-gray-900 dark:text-white">Backend & Java</h3>
+                <ul class="space-y-2 text-gray-600 dark:text-gray-400">
+                    <li class="flex items-center"><span class="w-2 h-2 bg-blue-500 rounded-full mr-2"></span> Java & OOP</li>
+                    <li class="flex items-center"><span class="w-2 h-2 bg-blue-500 rounded-full mr-2"></span> Spring Boot</li>
+                    <li class="flex items-center"><span class="w-2 h-2 bg-blue-500 rounded-full mr-2"></span> Hibernate & JDBC</li>
+                    <li class="flex items-center"><span class="w-2 h-2 bg-blue-500 rounded-full mr-2"></span> REST APIs</li>
+                    <li class="flex items-center"><span class="w-2 h-2 bg-blue-500 rounded-full mr-2"></span> Microservices</li>
+                </ul>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow">
+                <div class="text-orange-500 mb-4 text-2xl"><i class="fas fa-cloud"></i></div>
+                <h3 class="font-bold text-xl mb-4 text-gray-900 dark:text-white">Cloud & DevOps</h3>
+                <ul class="space-y-2 text-gray-600 dark:text-gray-400">
+                    <li class="flex items-center"><span class="w-2 h-2 bg-orange-500 rounded-full mr-2"></span> AWS (EC2, EKS, S3)</li>
+                    <li class="flex items-center"><span class="w-2 h-2 bg-orange-500 rounded-full mr-2"></span> Docker & Kubernetes</li>
+                    <li class="flex items-center"><span class="w-2 h-2 bg-orange-500 rounded-full mr-2"></span> CI/CD Pipelines</li>
+                    <li class="flex items-center"><span class="w-2 h-2 bg-orange-500 rounded-full mr-2"></span> Linux (Shell Scripting)</li>
+                    <li class="flex items-center"><span class="w-2 h-2 bg-orange-500 rounded-full mr-2"></span> Git & GitHub</li>
+                </ul>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow">
+                <div class="text-green-500 mb-4 text-2xl"><i class="fas fa-database"></i></div>
+                <h3 class="font-bold text-xl mb-4 text-gray-900 dark:text-white">Data Management</h3>
+                <ul class="space-y-2 text-gray-600 dark:text-gray-400">
+                    <li class="flex items-center"><span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span> MySQL</li>
+                    <li class="flex items-center"><span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span> Redis</li>
+                    <li class="flex items-center"><span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span> Key-DB</li>
+                </ul>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow">
+                <div class="text-purple-500 mb-4 text-2xl"><i class="fas fa-tools"></i></div>
+                <h3 class="font-bold text-xl mb-4 text-gray-900 dark:text-white">Other Skills</h3>
+                <ul class="space-y-2 text-gray-600 dark:text-gray-400">
+                    <li class="flex items-center"><span class="w-2 h-2 bg-purple-500 rounded-full mr-2"></span> Telecom (5G Domain)</li>
+                    <li class="flex items-center"><span class="w-2 h-2 bg-purple-500 rounded-full mr-2"></span> Postman / API Testing</li>
+                    <li class="flex items-center"><span class="w-2 h-2 bg-purple-500 rounded-full mr-2"></span> Token Auth (JWT)</li>
+                    <li class="flex items-center"><span class="w-2 h-2 bg-purple-500 rounded-full mr-2"></span> HTML & CSS</li>
+                    <li class="flex items-center"><span class="w-2 h-2 bg-purple-500 rounded-full mr-2"></span> HTTP/2 Protocol</li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section id="certifications" class="min-h-screen bg-white dark:bg-[#0b1120] pt-20 pb-20 transition-colors duration-300 flow-root" style="scroll-margin-top: 80px;">
+    <div class="container mx-auto px-6 max-w-7xl">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white font-['Plus_Jakarta_Sans'] tracking-tight">
+                Certifications & <span class="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">Learning</span>
+            </h2>
+        </div>
+
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="group p-8 bg-gray-50 dark:bg-[#111827] rounded-[2rem] border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-xl transition-all duration-300">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="p-3 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-xl">
+                        <i class="fas fa-certificate text-2xl"></i>
+                    </div>
+                    <span class="px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-[10px] font-bold rounded-full uppercase tracking-widest">Completed</span>
+                </div>
+                <h4 class="font-bold text-xl mb-2 dark:text-white">Java Full Stack</h4>
+                <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Kodenst • 2022</p>
+                <p class="mt-4 text-gray-600 dark:text-gray-400 text-sm leading-relaxed">Comprehensive training in Java, Spring Boot, and RESTful APIs.</p>
+            </div>
+
+            <div class="group p-8 bg-gray-50 dark:bg-[#111827] rounded-[2rem] border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-xl transition-all duration-300">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="p-3 bg-orange-100 dark:bg-orange-900/30 text-orange-600 rounded-xl">
+                        <i class="fab fa-linux text-2xl"></i>
+                    </div>
+                    <span class="px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-[10px] font-bold rounded-full uppercase tracking-widest">Completed</span>
+                </div>
+                <h4 class="font-bold text-xl mb-2 dark:text-white">Linux & Shell</h4>
+                <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Coursera • 2024</p>
+                <p class="mt-4 text-gray-600 dark:text-gray-400 text-sm leading-relaxed">Focused on automation and environment configuration.</p>
+            </div>
+
+            <div class="group p-8 bg-orange-50/30 dark:bg-orange-900/10 rounded-[2rem] border-2 border-dashed border-orange-200 dark:border-orange-800 shadow-sm transition-all duration-300">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="p-3 bg-orange-500 text-white rounded-xl shadow-lg shadow-orange-500/20">
+                        <i class="fas fa-cloud text-2xl animate-pulse"></i>
+                    </div>
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-orange-600 dark:text-orange-400">In Progress</span>
+                </div>
+                <h4 class="font-bold text-xl mb-2 dark:text-white leading-tight">AWS Practitioner</h4>
+                <p class="text-gray-600 dark:text-gray-400 text-sm mb-6">Mastering S3, EC2, and Cloud Infrastructure.</p>
+                <div class="space-y-2">
+                    <div class="flex justify-between text-[10px] font-bold uppercase text-gray-500">
+                        <span>Progress</span><span>75%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                        <div class="bg-orange-500 h-2 rounded-full" style="width: 75%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="contact" class="min-h-screen bg-white dark:bg-[#0b1120] pt-12 pb-14 transition-colors duration-300" style="scroll-margin-top: 80px;">
+    <div class="container mx-auto px-6 max-w-7xl">
+        <div class="text-center mb-10">
+            <h2 class="text-3xl font-bold mb-2 text-gray-800 dark:text-white">Get In <span class="gradient-text text-blue-600">Touch</span></h2>
+            <p class="italic text-gray-500 dark:text-gray-400 text-sm">
+                "Your <span class="text-blue-500 font-semibold">network</span> is your <span class="text-orange-500 font-semibold">net worth</span>—I’m always open to discussing new opportunities."
+            </p>
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-10 items-start">
+            <div class="w-full lg:w-5/12">
+                <h3 class="text-xl font-bold mb-3 text-gray-800 dark:text-white">Let's Build Something Together</h3>
+                <p class="mb-8 text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+                    Whether you have a specific project in mind or just want to connect for future technical opportunities in the <strong>Java, Cloud, or Telecom</strong> space, my inbox is always open.
+                </p>
+
+                <div class="space-y-4 mb-10">
+                    <div class="group flex items-center space-x-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 hover:border-blue-500/50 transition-all shadow-sm">
+                        <div class="flex items-center justify-center w-12 h-12 bg-blue-500/10 text-blue-500 rounded-xl group-hover:bg-blue-500 group-hover:text-white transition-all">
+                            <i class="fas fa-envelope text-lg"></i>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Email Me</span>
+                            <a href="mailto:sourabhawate7474@email.com" class="text-sm font-semibold text-gray-700 dark:text-gray-200 hover:text-blue-500 transition-colors">
+                                sourabhawate7474@email.com
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="group flex items-center space-x-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 hover:border-green-500/50 transition-all shadow-sm">
+                        <div class="flex items-center justify-center w-12 h-12 bg-green-500/10 text-green-500 rounded-xl group-hover:bg-green-500 group-hover:text-white transition-all">
+                            <i class="fas fa-phone-alt text-lg"></i>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Call Me</span>
+                            <a href="tel:+919380765797" class="text-sm font-semibold text-gray-700 dark:text-gray-200 hover:text-green-500 transition-colors">
+                                +91 9380765797
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="group flex items-center space-x-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 hover:border-orange-500/50 transition-all shadow-sm">
+                        <div class="flex items-center justify-center w-12 h-12 bg-orange-500/10 text-orange-500 rounded-xl group-hover:bg-orange-500 group-hover:text-white transition-all">
+                            <i class="fas fa-map-marker-alt text-lg"></i>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Location</span>
+                            <span class="text-sm font-semibold text-gray-700 dark:text-gray-200">
+                                Bangalore, Karnataka
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-full lg:w-7/12 flex-grow flex flex-col">
+                <div class="bg-gray-50 dark:bg-gray-800 p-6 md:p-8 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm flex-grow flex flex-col justify-between">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block mb-1 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Name</label>
+                            <input type="text" id="form-name" placeholder="Your name" class="w-full px-4 py-2.5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none text-sm transition-all text-gray-800 dark:text-white">
+                        </div>
+                        <div>
+                            <label class="block mb-1 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Email</label>
+                            <input type="email" id="form-email" placeholder="your@email.com" class="w-full px-4 py-2.5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none text-sm transition-all text-gray-800 dark:text-white">
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block mb-1 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Subject</label>
+                        <input type="text" id="form-subject" placeholder="How can I help?" class="w-full px-4 py-2.5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none text-sm transition-all text-gray-800 dark:text-white">
+                    </div>
+
+                    <div class="mb-11 flex-grow flex flex-col">
+                        <label class="block mb-1 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Message</label>
+                        <textarea id="form-message" rows="3" placeholder="Your message..." class="w-full px-4 py-2.5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none text-sm resize-none transition-all text-gray-800 dark:text-white flex-grow"></textarea>
+                    </div>
+
+                    <button id="form-submit" type="button" class="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow-lg shadow-blue-500/20 transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-widest mt-auto">
+                        Send Message <i class="fas fa-paper-plane text-xs"></i>
+                    </button>
+
+                    <div id="form-status" class="hidden mt-4 text-sm text-center"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer class="py-8 bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800">
+    <div class="container mx-auto px-6 text-center">
+        <p class="text-gray-500 dark:text-gray-400 text-xs">
+            © 2026 Portfolio. Built with passion & coffee.
+        </p>
+    </div>
+</footer>
+
+<script>
+    // ───────────────────────────────────────────────
+    //  THEME / DARK MODE
+    // ───────────────────────────────────────────────
+    const html  = document.documentElement;
+    const saved = localStorage.getItem('theme') ||
+              (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    html.classList.add(saved);
+
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+        html.classList.toggle('dark');
+        localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+    });
+
+    // ───────────────────────────────────────────────
+    //  MOBILE MENU
+    // ───────────────────────────────────────────────
+    const mobileMenu   = document.getElementById('mobile-menu');
+    const mobileButton = document.getElementById('mobile-menu-button');
+    if (mobileButton && mobileMenu) {
+        mobileButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+        document.querySelectorAll('#mobile-menu a').forEach(a =>
+            a.addEventListener('click', () => mobileMenu.classList.add('hidden')));
+    }
+
+    // ───────────────────────────────────────────────
+    //  SMOOTH SCROLL
+    // ───────────────────────────────────────────────
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', e => {
+            const target = document.querySelector(a.getAttribute('href'));
+            if (target) {
+                e.preventDefault();
+                window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
+            }
+        });
+    });
+
+    // ───────────────────────────────────────────────
+    //  CONTACT FORM LOGIC
+    // ───────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+        const submitBtn = document.getElementById('form-submit');
+
+        if (!submitBtn) {
+            console.error("Could not find the submit button! Check your HTML ID.");
+            return;
+        }
+
+        submitBtn.addEventListener('click', async () => {
+            // 1. DYNAMIC URL DETECTION
+            // If local, use localhost. If live, use your backend URL.
+            const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            const BASE_URL = isLocal
+                ? 'http://localhost:8080'
+                : 'https://your-backend-api-name.onrender.com';
+
+            // 2. Get Form Values
+            const name = document.getElementById('form-name').value.trim();
+            const email = document.getElementById('form-email').value.trim();
+            const subject = document.getElementById('form-subject').value.trim();
+            const message = document.getElementById('form-message').value.trim();
+
+            // 3. Validation
+            if (!name || !email || !subject || !message) {
+                alert("Please fill in all details!");
+                return;
+            }
+
+            // 4. UI Feedback (Disable & Spinner)
+            const originalContent = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = 'Sending... <i class="fas fa-spinner fa-spin"></i>';
+
+            try {
+                // 5. API Call
+                const response = await fetch(`${BASE_URL}/api/contact`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, subject, message })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert("Success! Your message was sent.");
+                    // Clear fields
+                    ['form-name', 'form-email', 'form-subject', 'form-message'].forEach(id => {
+                        document.getElementById(id).value = '';
+                    });
+                } else {
+                    alert("Server Error: " + (data.message || "Failed to send."));
+                }
+            } catch (error) {
+                console.error("Network Error:", error);
+                alert("Connection Error: Could not reach the backend server.");
+            } finally {
+                // 6. Restore Button
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalContent;
+            }
+        });
+    });
+</script>
+</body>
+</html>

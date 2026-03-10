@@ -1,0 +1,41 @@
+# === SECRETS (MOST IMPORTANT) ===
+# This hides your Gmail passwords and local environment configs
+**/env.properties
+.env
+**/application-local.properties
+
+# === JAVA & MAVEN (Backend) ===
+**/target/
+*.class
+*.jar
+*.war
+*.ear
+*.log
+.mtj.tmp/
+*.orig
+architecture.html
+
+# === IDE & SYSTEM (Cleanliness) ===
+# Hides IntelliJ, VS Code, and OS-specific junk
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+.vscode/
+.settings/
+.classpath
+.project
+.factorypath
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# === FRONTEND / STATIC ===
+# Hides temporary build files if you use npm later
+**/node_modules/
+**/dist/
+.eslintcache
+
+# === DOCKER ===
+.docker/
