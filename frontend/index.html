@@ -6,6 +6,12 @@
     <title>Sourabh Awate | Backend Java Developer</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function(){
+           emailjs.init("sgs-srO9w7He_5_z1");
+        })();
+    </script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -491,7 +497,7 @@
                 </div>
             </div>
 
-            <div class="w-full lg:w-7/12 flex-grow flex flex-col">
+            <div id="contact-form" class="w-full lg:w-7/12 flex-grow flex flex-col">
                 <div class="bg-gray-50 dark:bg-gray-800 p-6 md:p-8 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm flex-grow flex flex-col justify-between">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div>
@@ -514,7 +520,7 @@
                         <textarea id="form-message" rows="3" placeholder="Your message..." class="w-full px-4 py-2.5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none text-sm resize-none transition-all text-gray-800 dark:text-white flex-grow"></textarea>
                     </div>
 
-                    <button id="form-submit" type="button" class="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow-lg shadow-blue-500/20 transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-widest mt-auto">
+                    <button id="form-submit" type="submit" class="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow-lg shadow-blue-500/20 transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-widest mt-auto">
                         Send Message <i class="fas fa-paper-plane text-xs"></i>
                     </button>
 
@@ -572,7 +578,7 @@
     });
 
     // ───────────────────────────────────────────────
-    //  CONTACT FORM LOGIC
+    //  CONTACT FORM LOGIC (EMAILJS)
     // ───────────────────────────────────────────────
     document.addEventListener('DOMContentLoaded', () => {
         const submitBtn = document.getElementById('form-submit');
@@ -582,53 +588,59 @@
             return;
         }
 
-        submitBtn.addEventListener('click', async () => {
-            // 1. DYNAMIC URL DETECTION
-            // If local, use localhost. If live, use your backend URL.
-            const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-            const BASE_URL = isLocal
-            ? 'http://localhost:8080'
-            : 'https://portfolio-backend-c1qd.onrender.com';
+        submitBtn.addEventListener('click', async (e) => {
+            e.preventDefault(); // Prevent default behavior
 
-            // 2. Get Form Values
+            // 1. Get Form Values
             const name = document.getElementById('form-name').value.trim();
             const email = document.getElementById('form-email').value.trim();
             const subject = document.getElementById('form-subject').value.trim();
             const message = document.getElementById('form-message').value.trim();
 
-            // 3. Validation
+            // 2. Validation
             if (!name || !email || !subject || !message) {
                 alert("Please fill in all details!");
                 return;
             }
 
-            // 4. UI Feedback (Disable & Spinner)
+            // 3. UI Feedback (Disable & Spinner)
             const originalContent = submitBtn.innerHTML;
             submitBtn.disabled = true;
             submitBtn.innerHTML = 'Sending... <i class="fas fa-spinner fa-spin"></i>';
 
+            // 4. EmailJS Configuration
+            // Replace these with your actual IDs from EmailJS Dashboard
+            const SERVICE_ID = 'service_lxbrdzr';
+            const OWNER_TEMPLATE_ID = 'template_5oe49pb';
+            const AUTO_REPLY_TEMPLATE_ID = 'template_fizzdvp';
+
+            // Data prepared exactly like your Java ContactService
+            const templateParams = {
+                name: name,
+                email: email,
+                subject: subject,
+                message: message
+            };
+
             try {
-                // 5. API Call
-                const response = await fetch(`${BASE_URL}/api/contact`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, email, subject, message })
+                // 5. Execute Dual Sending (Replicating Java sendOwnerNotification & sendAutoReply)
+                await Promise.all([
+                    // Notification to You
+                    emailjs.send(SERVICE_ID, OWNER_TEMPLATE_ID, templateParams),
+                    // Auto-Reply to User
+                    emailjs.send(SERVICE_ID, AUTO_REPLY_TEMPLATE_ID, templateParams)
+                ]);
+
+                alert("Success! Your message was sent.");
+
+                // Clear fields
+                ['form-name', 'form-email', 'form-subject', 'form-message'].forEach(id => {
+                    document.getElementById(id).value = '';
                 });
 
-                const data = await response.json();
-
-                if (response.ok) {
-                    alert("Success! Your message was sent.");
-                    // Clear fields
-                    ['form-name', 'form-email', 'form-subject', 'form-message'].forEach(id => {
-                        document.getElementById(id).value = '';
-                    });
-                } else {
-                    alert("Server Error: " + (data.message || "Failed to send."));
-                }
             } catch (error) {
-                console.error("Network Error:", error);
-                alert("Connection Error: Could not reach the backend server.");
+                console.error("EmailJS Error:", error);
+                alert("Failed to send message. Please check your connection or EmailJS configuration.");
             } finally {
                 // 6. Restore Button
                 submitBtn.disabled = false;
